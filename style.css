@@ -1,14 +1,21 @@
+/* استيراد الخط */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
 
+/* المتغيرات الأساسية */
 :root {
-    --primary-color: #6c5ce7;
-    --secondary-color: #8ec5fc;
-    --background-gradient: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --text-color: #333;
-    --border-radius: 12px;
+    --bg-color: #1e272e;
+    --primary-color: #2d3436;
+    --secondary-color: #00b894;
+    --accent-color: #0984e3;
+    --text-color: #ffffff;
+    --text-muted: #b2bec3;
+    --success-color: #00b894;
+    --error-color: #d63031;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(0, 184, 148, 0.1);
 }
 
+/* الأساسيات */
 * {
     margin: 0;
     padding: 0;
@@ -17,283 +24,523 @@
 }
 
 body {
-    background: var(--background-gradient);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    direction: rtl;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
     line-height: 1.6;
 }
 
-.container {
-    background-color: white;
-    border-radius: var(--border-radius);
-    padding: 25px;
-    width: 100%;
-    max-width: 600px;
-    box-shadow: 0 10px 30px var(--shadow-color);
-}
-
-.app-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-h1 {
-    color: var(--text-color);
-    margin-bottom: 10px;
-    font-size: 2em;
-}
-
-.app-description {
-    color: #666;
-    font-size: 0.9em;
-}
-
-.todo-input-container {
-    margin-bottom: 20px;
-}
-
-.todo-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-input[type="text"] {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid #eee;
-    border-radius: var(--border-radius);
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
-
-input[type="text"]:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
-}
-
+/* الأزرار العامة */
 button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
+    font-family: 'Cairo', sans-serif;
     border: none;
-    border-radius: var(--border-radius);
     cursor: pointer;
     transition: all 0.3s ease;
-    color: white;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* حاوية التطبيق */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* رأس التطبيق */
+.app-header {
+    background: var(--primary-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.app-title i {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.app-title h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* أزرار التصفية */
+.filter-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
     font-weight: 600;
 }
 
-#analyzeTask {
-    background-color: var(--primary-color);
+.filter-btn:hover {
+    background: var(--hover-bg);
+    color: var(--text-color);
 }
 
-#analyzeTask:hover {
-    background-color: #5b4cdb;
-    transform: translateY(-2px);
+.filter-btn.active {
+    background: var(--secondary-color);
+    color: var(--text-color);
 }
 
-#analyzeTask:disabled {
-    background-color: #a8a5e6;
+/* حاوية المدخلات */
+.task-input-container {
+    background: var(--primary-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.task-input {
+    width: 100%;
+    background: var(--bg-color);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 1rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    resize: none;
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+}
+
+.task-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+}
+
+/* تصميم رسائل التحليل */
+.analysis-status {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.analysis-status.error {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.analysis-status.success {
+    background-color: rgba(0, 184, 148, 0.1);
+    color: #00b894;
+}
+
+/* زر التحليل */
+.analyze-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #00b894;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.analyze-btn:hover {
+    background-color: #00a884;
+    transform: scale(1.05);
+}
+
+.analyze-btn:disabled {
+    background-color: #b2bec3;
     cursor: not-allowed;
     transform: none;
 }
 
-#addTask {
-    background-color: var(--secondary-color);
+.analyze-btn i {
+    font-size: 1.1em;
 }
 
-#addTask:hover {
-    background-color: #7ab4eb;
-    transform: translateY(-2px);
+.fa-spinner {
+    animation: spin 1s linear infinite;
 }
 
-.analysis-status {
-    text-align: center;
-    color: #666;
-    font-size: 0.9em;
-    min-height: 20px;
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-.filters {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-}
-
-.filter {
-    background-color: transparent;
-    color: #666;
-    border: 1px solid #ddd;
-    padding: 8px 16px;
-}
-
-.filter:hover {
-    background-color: #f8f9fa;
-}
-
-.filter.active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
+/* حاوية المهام */
 .tasks-container {
-    min-height: 200px;
+    background: var(--primary-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    flex-grow: 1;
+    box-shadow: var(--shadow);
 }
 
-#taskList {
-    list-style: none;
-    margin-bottom: 20px;
+.tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
 }
 
+.tasks-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.tasks-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* عنصر المهمة */
 .task-item {
+    background: var(--bg-color);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: var(--border-radius);
-    margin-bottom: 10px;
+    gap: 1rem;
     transition: all 0.3s ease;
-    animation: fade-in 0.3s ease;
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-out {
-    animation: fade-out 0.3s ease forwards;
-}
-
-@keyframes fade-out {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
 }
 
 .task-item:hover {
     transform: translateX(-5px);
-    background-color: #f1f3f5;
 }
 
-.task-item.completed {
-    opacity: 0.7;
-    background-color: #f1f3f5;
-}
-
-.task-item.completed .task-text {
-    text-decoration: line-through;
-    color: #888;
-}
-
-.checkbox {
-    margin-left: 12px;
+.task-checkbox {
+    position: relative;
     width: 20px;
     height: 20px;
     cursor: pointer;
 }
 
+.task-checkbox input {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.task-checkbox input:checked + .checkmark {
+    background: var(--secondary-color);
+}
+
+.task-checkbox input:checked + .checkmark:after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.8rem;
+}
+
+.task-content {
+    flex-grow: 1;
+}
+
 .task-text {
-    flex: 1;
-    font-size: 16px;
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+}
+
+.task-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    background: transparent;
+    color: var(--text-muted);
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: var(--hover-bg);
     color: var(--text-color);
 }
 
-.delete-btn {
-    background-color: transparent;
-    color: #dc3545;
-    padding: 8px;
-    font-size: 18px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.task-item:hover .delete-btn {
-    opacity: 1;
-}
-
 .delete-btn:hover {
-    background-color: #ffebee;
-    color: #dc3545;
+    color: var(--error-color);
 }
 
+/* حالة الفراغ */
 .empty-state {
     text-align: center;
-    padding: 40px 20px;
-    color: #666;
-    display: none;
+    padding: 3rem 0;
+    color: var(--text-muted);
 }
 
 .empty-state i {
-    font-size: 3em;
-    color: #ddd;
-    margin-bottom: 15px;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
 }
 
-.empty-state-hint {
-    font-size: 0.9em;
-    color: #999;
-    margin-top: 5px;
+.empty-state p {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
 }
 
-.todo-footer {
-    display: flex;
-    justify-content: space-between;
+.empty-state small {
+    font-size: 0.9rem;
+}
+
+/* شاشة التحميل */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    flex-direction: column;
     align-items: center;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
+    justify-content: center;
+    z-index: 1000;
 }
 
-#tasksCount {
-    color: #666;
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--text-muted);
+    border-radius: 50%;
+    border-top-color: var(--secondary-color);
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
 }
 
-.clear-btn {
-    background-color: transparent;
-    color: #666;
-    border: 1px solid #ddd;
-    font-size: 0.9em;
+.loading-overlay p {
+    color: var(--text-color);
+    font-size: 1.1rem;
 }
 
-.clear-btn:hover {
-    background-color: #ffebee;
-    color: #dc3545;
-    border-color: #dc3545;
-}
-
-@media (max-width: 480px) {
-    .button-text {
-        display: none;
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
-    
-    button {
-        padding: 12px;
+}
+
+/* تحسينات للأجهزة المحمولة */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 1rem;
     }
-    
+
+    .app-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .task-input {
+        font-size: 0.9rem;
+    }
+
     .task-item {
-        padding: 12px;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.8rem;
     }
-    
-    h1 {
-        font-size: 1.5em;
+
+    .task-actions {
+        flex-direction: row;
     }
+}
+
+/* تحسينات الأداء */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* تصميم زر حذف الكل */
+.clear-all-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-all-btn:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+.clear-all-btn i {
+    font-size: 1.1em;
+}
+
+/* تصميم نافذة تأكيد الحذف */
+.confirm-dialog {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirm-content {
+    background-color: #2d3436;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.confirm-content i {
+    font-size: 3em;
+    color: #e74c3c;
+    margin-bottom: 16px;
+}
+
+.confirm-content h3 {
+    margin: 0 0 8px;
+    color: #fff;
+    font-size: 1.5em;
+}
+
+.confirm-content p {
+    margin: 0 0 20px;
+    color: #b2bec3;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.confirm-btn, .cancel-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.confirm-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background-color: #c0392b;
+}
+
+.cancel-btn {
+    background-color: #636e72;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #2d3436;
+}
+
+/* تحسين تصميم النص القابل للتحرير */
+.task-text[contenteditable="true"] {
+    background-color: #2d3436;
+    padding: 4px 8px;
+    border-radius: 4px;
+    outline: 2px solid #00b894;
+    min-width: 200px;
+}
+
+/* إخفاء زر الترتيب */
+.sort-btn {
+    display: none;
+}
+
+/* إخفاء زر حذف المهام المكتملة */
+.clear-completed-btn {
+    display: none;
 }

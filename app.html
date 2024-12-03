@@ -3,55 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة المهام الذكية</title>
-    <link rel="stylesheet" href="style.css">
+    <title>مهامي الذكية - إدارة المهام</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="app-header">
-            <h1>قائمة المهام الذكية</h1>
-            <p class="app-description">اكتب ما تريد تحويله إلى مهام وسيقوم الذكاء الاصطناعي بمساعدتك</p>
-        </div>
-        
-        <div class="todo-input-container">
-            <div class="todo-input">
-                <input type="text" id="taskInput" placeholder="مثال: أريد تنظيم رحلة إلى دبي...">
-                <button id="analyzeTask" title="تحليل ذكي للنص">
-                    <i class="fas fa-brain"></i>
-                    <span class="button-text">تحليل</span>
-                </button>
-                <button id="addTask" title="إضافة مهمة يدوياً">
-                    <i class="fas fa-plus"></i>
-                    <span class="button-text">إضافة</span>
-                </button>
-            </div>
-            <div id="analysisStatus" class="analysis-status"></div>
-        </div>
-
-        <div class="filters">
-            <button class="filter active" data-filter="all">الكل</button>
-            <button class="filter" data-filter="active">النشطة</button>
-            <button class="filter" data-filter="completed">المكتملة</button>
-        </div>
-
-        <div class="tasks-container">
-            <ul id="taskList"></ul>
-            <div id="emptyState" class="empty-state">
+    <div class="app-container">
+        <header class="app-header">
+            <div class="app-title">
                 <i class="fas fa-tasks"></i>
-                <p>لا توجد مهام حالياً</p>
-                <p class="empty-state-hint">ابدأ بكتابة ما تريد تحويله إلى مهام</p>
+                <h1>مهامي الذكية</h1>
+            </div>
+            <div class="header-actions">
+                <button class="filter-btn active" data-filter="all" data-tooltip="عرض كل المهام">
+                    الكل
+                </button>
+                <button class="filter-btn" data-filter="active" data-tooltip="المهام النشطة">
+                    قيد التنفيذ
+                </button>
+                <button class="filter-btn" data-filter="completed" data-tooltip="المهام المكتملة">
+                    مكتملة
+                </button>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <div class="task-input-container">
+                <textarea 
+                    class="task-input" 
+                    placeholder="أدخل مهامك هنا... اضغط Enter للإضافة أو زر التحليل لتحويل النص إلى مهام"
+                    rows="3"
+                ></textarea>
+                <button class="analyze-btn" data-tooltip="تحليل النص وإنشاء المهام">
+                    <i class="fas fa-brain"></i>
+                    تحليل
+                </button>
+            </div>
+
+            <div class="analysis-status"></div>
+
+            <div class="tasks-container">
+                <div class="tasks-header">
+                    <h2>المهام (<span class="tasks-count">0</span>)</h2>
+                    <div class="tasks-actions">
+                        <button class="sort-btn" data-tooltip="ترتيب المهام" onclick="sortTasks()">
+                            <i class="fas fa-sort"></i>
+                        </button>
+                        <button class="clear-completed-btn" data-tooltip="حذف المهام المكتملة" onclick="clearCompletedTasks()">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button class="clear-all-btn" data-tooltip="حذف جميع المهام">
+                            <i class="fas fa-trash"></i>
+                            حذف الكل
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tasks-list"></div>
+
+                <div class="empty-state" style="display: none;">
+                    <i class="fas fa-clipboard-list"></i>
+                    <p>لا توجد مهام حالياً</p>
+                    <small>أضف مهامك وسنقوم بتنظيمها لك</small>
+                </div>
+            </div>
+        </main>
+
+        <!-- نافذة تأكيد الحذف -->
+        <div class="confirm-dialog" id="confirmDialog">
+            <div class="confirm-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>تأكيد الحذف</h3>
+                <p>هل أنت متأكد من حذف جميع المهام؟</p>
+                <div class="confirm-buttons">
+                    <button class="confirm-btn" id="confirmDelete">نعم، حذف الكل</button>
+                    <button class="cancel-btn" id="cancelDelete">إلغاء</button>
+                </div>
             </div>
         </div>
 
-        <div class="todo-footer">
-            <span id="tasksCount">0 مهام متبقية</span>
-            <button id="clearCompleted" class="clear-btn">
-                <i class="fas fa-broom"></i>
-                حذف المكتملة
-            </button>
+        <div class="loading-overlay">
+            <div class="loader"></div>
+            <p>جاري تحليل النص...</p>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        // المتغيرات العامة
+        const taskInput = document.querySelector('.task-input');
+        const analyzeButton = document.querySelector('.analyze-btn');
+        const tasksList = document.querySelector('.tasks-list');
+        const emptyState = document.querySelector('.empty-state');
+        const tasksCount = document.querySelector('.tasks-count');
+        const loadingOverlay = document.querySelector('.loading-overlay');
+        const analysisStatus = document.querySelector('.analysis-status');
+        const filters = document.querySelectorAll('.filter-btn');
+
+        const GEMINI_API_KEY = 'AIzaSyAz2VRduUDJR82yaKtAD7yiO_0pBIZdNJs';
+        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let sortDirection = 'asc';
+
+        // تحديث واجهة المستخدم
+        function updateUI() {
+            const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            const filteredTasks = tasks.filter(task => {
+                if (currentFilter === 'active') return !task.completed;
+                if (currentFilter === 'completed') return task.completed;
+                return true;
+            });
+
+            tasksList.innerHTML = '';
+            
+            if (filteredTasks.length === 0) {
+                emptyState.style.display = 'block';
+                tasksList.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                tasksList.style.display = 'block';
+
+                filteredTasks.forEach(task => {
+                    const taskElement = createTaskElement(task);
+                    tasksList.appendChild(taskElement);
+                });
+            }
+
+            tasksCount.textContent = tasks.filter(task => !task.completed).length;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // إنشاء عنصر مهمة
+        function createTaskElement(task) {
+            const div = document.createElement('div');
+            div.className = `task-item${task.completed ? ' completed' : ''}`;
+            div.dataset.id = task.id;
+
+            div.innerHTML = `
+                <label class="task-checkbox">
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+                    <span class="checkmark"></span>
+                </label>
+                <div class="task-content">
+                    <p class="task-text" contenteditable="false">${task.text}</p>
+                    <span class="task-date">${task.date}</span>
+                </div>
+                <div class="task-actions">
+                    <button class="action-btn edit-btn" onclick="editTask(${task.id})" data-tooltip="تعديل">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteTask(${task.id})" data-tooltip="حذف">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+
+            // إضافة مستمع لحدث الـ blur للنص القابل للتحرير
+            const taskText = div.querySelector('.task-text');
+            taskText.addEventListener('blur', () => {
+                const newText = taskText.textContent.trim();
+                if (newText && newText !== task.text) {
+                    task.text = newText;
+                    taskText.contentEditable = "false";
+                    updateUI();
+                }
+            });
+
+            // إضافة مستمع لحدث الـ keydown للنص القابل للتحرير
+            taskText.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    taskText.blur();
+                }
+            });
+
+            return div;
+        }
+
+        // إضافة مهمة جديدة
+        function addTask(text) {
+            if (text.trim()) {
+                tasks.push({
+                    id: Date.now(),
+                    text: text.trim(),
+                    completed: false,
+                    date: new Date().toLocaleDateString('ar-SA')
+                });
+                updateUI();
+            }
+        }
+
+        // تبديل حالة المهمة
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                updateUI();
+            }
+        }
+
+        // حذف مهمة
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            updateUI();
+        }
+
+        // تعديل مهمة
+        function editTask(id) {
+            const taskElement = document.querySelector(`.task-item[data-id="${id}"]`);
+            const taskText = taskElement.querySelector('.task-text');
+            taskText.contentEditable = "true";
+            taskText.focus();
+            
+            // وضع المؤشر في نهاية النص
+            const range = document.createRange();
+            range.selectNodeContents(taskText);
+            range.collapse(false);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        // ترتيب المهام
+        function sortTasks() {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            tasks.sort((a, b) => {
+                if (sortDirection === 'asc') {
+                    return a.text.localeCompare(b.text, 'ar');
+                } else {
+                    return b.text.localeCompare(a.text, 'ar');
+                }
+            });
+            updateUI();
+        }
+
+        // حذف المهام المكتملة
+        function clearCompletedTasks() {
+            if (confirm('هل أنت متأكد من حذف جميع المهام المكتملة؟')) {
+                tasks = tasks.filter(task => !task.completed);
+                updateUI();
+            }
+        }
+
+        // حذف جميع المهام
+        function showDeleteConfirmation() {
+            const dialog = document.getElementById('confirmDialog');
+            dialog.style.display = 'flex';
+            
+            document.getElementById('confirmDelete').onclick = () => {
+                tasks = [];
+                updateUI();
+                dialog.style.display = 'none';
+            };
+            
+            document.getElementById('cancelDelete').onclick = () => {
+                dialog.style.display = 'none';
+            };
+        }
+
+        // تحليل النص باستخدام Gemini
+        async function analyzeWithGemini(text) {
+            const prompt = `
+            قم بتحليل النص التالي وتحويله إلى مهام قابلة للتنفيذ (actionable tasks).
+            قم بتقسيم المهام إلى خطوات صغيرة ومحددة.
+            أعط النتيجة على شكل قائمة من المهام فقط، كل سطر مهمة واحدة.
+            النص: ${text}
+            `;
+
+            try {
+                loadingOverlay.style.display = 'flex';
+                analysisStatus.textContent = 'جاري تحليل النص...';
+                
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const generatedTasks = data.candidates[0].content.parts[0].text
+                        .split('\n')
+                        .filter(task => task.trim())
+                        .map(task => task.replace(/^[-*]\s*/, '').trim());
+                    return generatedTasks;
+                }
+                return [];
+            } catch (error) {
+                console.error('Error analyzing with Gemini:', error);
+                showNotification('حدث خطأ أثناء تحليل النص. يرجى المحاولة مرة أخرى.');
+                return [];
+            } finally {
+                loadingOverlay.style.display = 'none';
+                analysisStatus.textContent = '';
+            }
+        }
+
+        // معالجة زر التحليل
+        async function handleAnalyze() {
+            const text = taskInput.value.trim();
+            if (!text) {
+                showNotification('يرجى كتابة نص للتحليل');
+                return;
+            }
+
+            analyzeButton.disabled = true;
+            const originalContent = analyzeButton.innerHTML;
+            analyzeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const generatedTasks = await analyzeWithGemini(text);
+                if (generatedTasks.length > 0) {
+                    generatedTasks.forEach(taskText => {
+                        tasks.push({
+                            id: Date.now() + Math.random(),
+                            text: taskText,
+                            completed: false,
+                            date: new Date().toLocaleDateString('ar-SA')
+                        });
+                    });
+                    taskInput.value = '';
+                    updateUI();
+                    showNotification('تم إنشاء المهام بنجاح!', 'success');
+                } else {
+                    showNotification('لم نتمكن من تحليل النص. حاول صياغته بشكل مختلف.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('حدث خطأ أثناء تحليل النص. يرجى المحاولة مرة أخرى.');
+            } finally {
+                analyzeButton.disabled = false;
+                analyzeButton.innerHTML = originalContent;
+            }
+        }
+
+        // إظهار رسالة للمستخدم
+        function showNotification(message, type = 'error') {
+            analysisStatus.textContent = message;
+            analysisStatus.className = `analysis-status ${type}`;
+            setTimeout(() => {
+                analysisStatus.textContent = '';
+                analysisStatus.className = 'analysis-status';
+            }, 3000);
+        }
+
+        // إضافة المستمعين
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addTask(taskInput.value);
+                taskInput.value = '';
+            }
+        });
+
+        analyzeButton.addEventListener('click', handleAnalyze);
+
+        filters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                filter.classList.add('active');
+                updateUI();
+            });
+        });
+
+        document.querySelector('.clear-all-btn').addEventListener('click', showDeleteConfirmation);
+
+        // تحديث واجهة المستخدم عند تحميل الصفحة
+        updateUI();
+    </script>
 </body>
 </html>

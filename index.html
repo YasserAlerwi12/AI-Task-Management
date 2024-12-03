@@ -3,110 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مساعدك الذكي لإدارة المهام</title>
+    <title>مهامي الذكية - إدارة المهام بالذكاء الاصطناعي</title>
     <link rel="stylesheet" href="landing.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header class="hero">
-        <nav class="nav-container">
-            <div class="logo">
-                <i class="fas fa-tasks"></i>
-                مهامي الذكية
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-brain"></i>
+                <span>مهامي الذكية</span>
             </div>
-            <a href="app.html" class="cta-button">تجربة التطبيق</a>
-        </nav>
-        <div class="hero-content">
-            <h1>حول أفكارك إلى مهام بذكاء</h1>
-            <p class="hero-description">استخدم قوة الذكاء الاصطناعي لتحويل أي نص إلى قائمة مهام منظمة وقابلة للتنفيذ</p>
-            <div class="hero-buttons">
-                <a href="app.html" class="primary-button">ابدأ الآن مجاناً</a>
-                <a href="#features" class="secondary-button">تعرف على المميزات</a>
+            <div class="nav-links">
+                <a href="#features">المميزات</a>
+                <a href="#how-it-works">كيف يعمل</a>
+                <a href="#examples">أمثلة</a>
+                <a href="app.html" class="cta-button">ابدأ الآن</a>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <section id="features" class="features">
-            <h2>مميزات التطبيق</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-brain"></i>
-                    <h3>تحليل ذكي</h3>
-                    <p>يحول أفكارك وخططك إلى مهام محددة وقابلة للتنفيذ باستخدام الذكاء الاصطناعي</p>
+    <!-- القسم الرئيسي -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>حول نصوصك إلى مهام منظمة <br>بذكاء اصطناعي</h1>
+                <p>استخدم قوة الذكاء الاصطناعي لتحويل أي نص إلى قائمة مهام منظمة ومرتبة. وفر وقتك وجهدك في تنظيم مهامك.</p>
+                <div class="hero-buttons">
+                    <a href="app.html" class="primary-button">
+                        <i class="fas fa-rocket"></i>
+                        ابدأ الاستخدام مجاناً
+                    </a>
+                    <a href="#how-it-works" class="secondary-button">
+                        <i class="fas fa-play"></i>
+                        شاهد كيف يعمل
+                    </a>
                 </div>
-                <div class="feature-card">
+            </div>
+            <div class="hero-image" data-aos="fade-left">
+                <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="AI Task Management">
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم المميزات -->
+    <section id="features" class="features">
+        <div class="section-container">
+            <h2 data-aos="fade-up">مميزات فريدة</h2>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-brain"></i>
+                    <h3>ذكاء اصطناعي متقدم</h3>
+                    <p>يحلل النصوص ويفهم السياق لإنشاء مهام دقيقة ومنظمة</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
                     <i class="fas fa-language"></i>
                     <h3>دعم اللغة العربية</h3>
-                    <p>تطبيق مصمم خصيصاً للمستخدم العربي مع واجهة سهلة الاستخدام</p>
+                    <p>مصمم خصيصاً للغة العربية مع واجهة سهلة الاستخدام</p>
                 </div>
-                <div class="feature-card">
-                    <i class="fas fa-cloud"></i>
-                    <h3>حفظ تلقائي</h3>
-                    <p>حفظ جميع مهامك تلقائياً في متصفحك للوصول إليها في أي وقت</p>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-bolt"></i>
+                    <h3>سرعة في الأداء</h3>
+                    <p>تحويل فوري للنصوص إلى مهام مع حفظ تلقائي</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
                     <i class="fas fa-mobile-alt"></i>
                     <h3>تصميم متجاوب</h3>
-                    <p>استخدم التطبيق بسهولة على جميع الأجهزة والشاشات</p>
+                    <p>يعمل على جميع الأجهزة بنفس الكفاءة والجودة</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="demo">
-            <h2>كيف يعمل التطبيق؟</h2>
-            <div class="demo-steps">
-                <div class="demo-step">
+    <!-- قسم كيف يعمل -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="section-container">
+            <h2 data-aos="fade-up">كيف يعمل؟</h2>
+            <div class="steps">
+                <div class="step" data-aos="fade-up" data-aos-delay="100">
                     <div class="step-number">1</div>
-                    <h3>اكتب ما تريد</h3>
-                    <p>اكتب هدفك أو مشروعك بلغتك الطبيعية</p>
+                    <h3>أدخل النص</h3>
+                    <p>اكتب أو الصق أي نص تريد تحويله إلى مهام</p>
                 </div>
-                <div class="demo-step">
+                <div class="step" data-aos="fade-up" data-aos-delay="200">
                     <div class="step-number">2</div>
-                    <h3>دع الذكاء الاصطناعي يحلل</h3>
-                    <p>سيقوم النظام بتحليل النص وتحويله إلى مهام</p>
+                    <h3>تحليل ذكي</h3>
+                    <p>يقوم الذكاء الاصطناعي بتحليل النص وفهم محتواه</p>
                 </div>
-                <div class="demo-step">
+                <div class="step" data-aos="fade-up" data-aos-delay="300">
                     <div class="step-number">3</div>
-                    <h3>نظم مهامك</h3>
-                    <p>تتبع إنجازك وحدث حالة المهام</p>
+                    <h3>مهام منظمة</h3>
+                    <p>احصل على قائمة مهام منظمة ومرتبة تلقائياً</p>
                 </div>
             </div>
-            <div class="demo-cta">
-                <a href="app.html" class="primary-button">جرب الآن</a>
-            </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="examples">
-            <h2>أمثلة على ما يمكنك فعله</h2>
+    <!-- قسم الأمثلة -->
+    <section class="examples" id="examples">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">كيف يعمل التطبيق؟</h2>
             <div class="examples-grid">
-                <div class="example-card">
-                    <h3>تنظيم رحلة</h3>
-                    <p>"أريد تنظيم رحلة إلى دبي لمدة أسبوع"</p>
+                <div class="example-card" data-aos="fade-up">
+                    <div class="example-text">
+                        <h3>تحويل النص إلى مهام</h3>
+                        <p>أدخل النص الخاص بك وسيقوم التطبيق بتحليله وتحويله إلى مهام منظمة</p>
+                    </div>
+                    <div class="example-demo">
+                        <div class="input-text">اجتماع مع الفريق غداً الساعة 10 صباحاً، تحضير العرض التقديمي، إرسال التقرير الأسبوعي</div>
+                        <i class="fas fa-arrow-down"></i>
+                        <ul class="output-tasks">
+                            <li>اجتماع مع الفريق (غداً 10:00 ص)</li>
+                            <li>تحضير العرض التقديمي</li>
+                            <li>إرسال التقرير الأسبوعي</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="example-card">
-                    <h3>تخطيط مشروع</h3>
-                    <p>"كيف أبدأ مشروع متجر إلكتروني؟"</p>
-                </div>
-                <div class="example-card">
-                    <h3>تنظيم حدث</h3>
-                    <p>"أريد تنظيم حفلة عيد ميلاد لطفلي"</p>
+                <div class="example-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="example-text">
+                        <h3>تنظيم المهام تلقائياً</h3>
+                        <p>يقوم التطبيق بتصنيف وترتيب مهامك بشكل ذكي</p>
+                    </div>
+                    <div class="example-demo">
+                        <div class="input-text">تسليم المشروع نهاية الأسبوع، شراء مستلزمات المكتب، مراجعة الخطة الشهرية</div>
+                        <i class="fas fa-arrow-down"></i>
+                        <ul class="output-tasks">
+                            <li>تسليم المشروع (عالي الأهمية)</li>
+                            <li>مراجعة الخطة الشهرية</li>
+                            <li>شراء مستلزمات المكتب</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
+    <!-- قسم الدعوة للعمل -->
+    <section class="cta">
+        <div class="section-container">
+            <div class="cta-content" data-aos="fade-up">
+                <h2>جاهز لتنظيم مهامك بذكاء؟</h2>
+                <p>ابدأ الآن واستخدم قوة الذكاء الاصطناعي في تنظيم مهامك</p>
+                <a href="app.html" class="primary-button">
+                    <i class="fas fa-rocket"></i>
+                    ابدأ الاستخدام مجاناً
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- التذييل -->
     <footer>
         <div class="footer-content">
             <div class="footer-logo">
                 <i class="fas fa-tasks"></i>
                 مهامي الذكية
             </div>
-            <p>استخدم قوة الذكاء الاصطناعي لتنظيم مهامك بشكل أفضل</p>
-            <div class="footer-cta">
-                <a href="app.html" class="primary-button">ابدأ الآن</a>
-            </div>
+            <p class="footer-text">
+                تم التطوير بواسطة 
+                <a href="https://github.com/YasserAlerwi" target="_blank">YasserAlerwi</a>
+                <br>
+                جميع الحقوق محفوظة © 2024
+            </p>
         </div>
     </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
 </body>
 </html>
